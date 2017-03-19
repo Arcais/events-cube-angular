@@ -7,11 +7,17 @@
   <title>you spin my head right round</title>
 
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/datetimepicker.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
 
   <script src="js/angular.min.js"></script>
   <script src="js/angular-routes.js"></script>
   <script src="js/angular-animate.js"></script>
+  <script src="js/jquery-3.2.0.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/moment.js"></script>
+  <script src="js/datetimepicker.js"></script>
+  <script src="js/datetimepicker.templates.js"></script>
   <script src="js/cookies.js"></script>
   <script src="app.js"></script>
 
@@ -27,24 +33,43 @@
 
   <div class="cube">
     <div class="square {{cubeSide}}" ng-switch="cubeSide">
-      <div ng-controller="eventCreateController" ng-switch-when="cube-top">
-        This side is {{cubeSide}}
-        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
-        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
-        <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)"></textarea>
-        <button>fdgsg</button>
+      <div class="input-container" ng-controller="eventCreateController" ng-switch-when="cube-top">
+        <div><h1><strong>Create an event</strong></h1></div>
+        <div>Give it a title:</div>
+        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.title"/>
+        <div>Choose a date:</div>
+        <div class="dropdown" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
+          <a class="dropdown-toggle" id="dropdown" role="button" data-toggle="dropdown">
+            <div class="input-group">
+              <input type="text" id="date" name="date" class="form-control" data-ng-model="event.date">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="event.date"></datetimepicker>
+          </ul>
+        </div>
+        <div>Add a description:</div>
+        <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.desc">
+        </textarea>
+        <button ng-click="saveEvent()">Save event</button>
       </div>
-      <div ng-controller="eventViewController" ng-switch-when="cube-side">
-        This side is {{cubeSide}} EVENTS GO HERE
-        Event no. {{eventDisplayIndex}}
+      <div ng-switch-when="cube-side">
+        <div ng-if="events[eventDisplayIndex]">
+          <div>Event no. {{eventDisplayIndex}}</div>
+          <div>Title: {{events[eventDisplayIndex].title}}</div>
+          <div>Date: {{events[eventDisplayIndex].date | date:'medium'}}</div>
+          <div>Desc: {{events[eventDisplayIndex].desc}}</div>
+        </div>
+        <div ng-if="!events[eventDisplayIndex]">
+          Event {{eventDisplayIndex}} doesn't exist.
+        </div>
       </div>
       <div ng-switch-when="cube-bottom">
-        This side is {{cubeSide}}
+        <div>Thank you for using this app!</div>
+        <div>© Dragos Paun, 2017</div>
       </div>
     </div>
   </div>
-
-<script>
-</script>
 
 </html>

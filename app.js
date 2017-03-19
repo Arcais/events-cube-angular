@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cubed', ['ngRoute']);
+var app = angular.module('cubed', ['ngRoute', 'ui.bootstrap.datetimepicker']);
 
 app.directive("switchside", function() {
 
@@ -58,23 +58,22 @@ app.factory('eventFactory', function() {
 
   var o = {};
 
-  o.sendHelloWorld = function(){
-    return "Hello world";
-  }
-
-  o.setEventDisplay = function(eventDisplayNumber){
-    setCookie("eventDisplayNumber",eventDisplayNumber);
-  }
-
-  o.getEventDisplay = function(){
-    var cookieValue = getCookie("eventDisplayNumber");
+  o.getEvents = function(){
+    var cookieValue = getCookie("events");
     if(cookieValue){
-      return parseInt(cookieValue);
+      return JSON.parse(cookieValue);
     }
     else{
-      this.setEventDisplay(0);
-      return parseInt(0);
+      return [];
     }
+  }
+
+  o.pushEvent = function(eventObject){
+    var tempEventArray = this.getEvents();
+    console.log(tempEventArray);
+    tempEventArray.push(eventObject);
+    console.log(tempEventArray);
+    setCookie("events",JSON.stringify(tempEventArray));
   }
 
   return o;
@@ -88,6 +87,7 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   $scope.cubeSide = 'cube-top';
   $scope.eventDisplayIndex=0;
   $scope.isInputSelected = false;
+  $scope.events = eventFactory.getEvents();
 
   $scope.setInputFocus = function(value){
     $scope.isInputSelected = value;
@@ -95,6 +95,7 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
 
   $scope.rotateTo = function(side){
     $scope.cubeSide = 'cube-'+side;
+    $scope.events = eventFactory.getEvents();
   }
 
   $scope.incrementDisplayIndex = function(){
@@ -113,30 +114,25 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
 
 }]);
 
-app.controller('eventViewController', ['$scope', 'eventFactory', function($scope, eventFactory) {
-  
-  $scope.events = [];
-  //parse the json n shit
-
-}]);
-
 app.controller('eventCreateController', ['$scope', 'eventFactory', function($scope, eventFactory) {
 
   $scope.event={};
   $scope.event.title="";
-  $scope.event.desc="";
   $scope.event.date="";
+  $scope.event.desc="";
   $scope.warnings="";
+
+  $scope.resetFields = function(){
+    $scope.event.title="";
+    $scope.event.date="";
+    $scope.event.desc="";
+    $scope.warnings="";
+  }
 
   $scope.saveEvent = function(){
     if($scope.event.title&&$scope.event.desc&&$scope.event.date){
-      console.log("Event");
+      eventFactory.pushEvent($scope.event);
       console.log($scope.event);
-      console.log("Saved");
-      $scope.event.title="";
-      $scope.event.desc="";
-      $scope.event.date="";
-      $scope.warnings="";
     }
     else{
       console.log("Display Warning");
