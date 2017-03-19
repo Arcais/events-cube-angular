@@ -23,12 +23,25 @@
     <![endif]-->
 </head>
 
-<body>
+<body tabindex="0" ng-controller="cubeController" switchside="cube-top">
 
   <div class="cube">
-
-    <div class="square {{ cubeSideHTMLClass }}" ng-view></div>
-
+    <div class="square {{cubeSide}}" ng-switch="cubeSide">
+      <div ng-controller="eventCreateController" ng-switch-when="cube-top">
+        This side is {{cubeSide}}
+        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
+        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
+        <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)"></textarea>
+        <button>fdgsg</button>
+      </div>
+      <div ng-controller="eventViewController" ng-switch-when="cube-side">
+        This side is {{cubeSide}} EVENTS GO HERE
+        Event no. {{eventDisplayIndex}}
+      </div>
+      <div ng-switch-when="cube-bottom">
+        This side is {{cubeSide}}
+      </div>
+    </div>
   </div>
 
 <script>
