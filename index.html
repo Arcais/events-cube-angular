@@ -46,7 +46,7 @@
             </div>
           </a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker data-ng-model="event.date"></datetimepicker>
+            <datetimepicker data-ng-model="event.date" data-before-render="setStartDateBeforeRender($dates)"></datetimepicker>
           </ul>
         </div>
         <div>Add a description:</div>

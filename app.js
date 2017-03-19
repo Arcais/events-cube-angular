@@ -122,6 +122,16 @@ app.controller('eventCreateController', ['$scope', 'eventFactory', function($sco
   $scope.event.desc="";
   $scope.warnings="";
 
+  $scope.setStartDateBeforeRender = function($dates) {
+    var activeDate = moment().subtract(1, 'day').add(1, 'minute');
+
+    $dates.filter(function (date) {
+      return date.localDateValue() <= activeDate.valueOf()
+    }).forEach(function (date) {
+      date.selectable = false;
+    })
+  }
+
   $scope.resetFields = function(){
     $scope.event.title="";
     $scope.event.date="";
