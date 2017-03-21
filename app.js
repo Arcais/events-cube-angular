@@ -70,9 +70,7 @@ app.factory('eventFactory', function() {
 
   o.pushEvent = function(eventObject){
     var tempEventArray = this.getEvents();
-    console.log(tempEventArray);
     tempEventArray.push(eventObject);
-    console.log(tempEventArray);
     setCookie("events",JSON.stringify(tempEventArray));
   }
 
@@ -142,7 +140,6 @@ app.controller('eventCreateController', ['$scope', 'eventFactory', function($sco
   $scope.saveEvent = function(){
     if($scope.event.title&&$scope.event.desc&&$scope.event.date){
       eventFactory.pushEvent($scope.event);
-      console.log($scope.event);
     }
     else{
       console.log("Display Warning");
@@ -181,7 +178,6 @@ app.controller('eventCreateController', ['$scope', 'eventFactory', function($sco
 //   }
 // });
 //
-//P.S. I forgot to tell you but the keypress $event also doesn't allow you to use keyboard arrows. It doesn't register them. At all.
 //
 //
 //
