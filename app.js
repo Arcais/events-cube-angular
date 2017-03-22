@@ -4,11 +4,11 @@ var app = angular.module('cubed', ['ngRoute', 'ui.bootstrap.datetimepicker']);
 
 app.directive("switchside", function() {
 
-  var d = {};
+  var switchside = {};
 
-  d.restrict = "A";
+  switchside.restrict = "A";
 
-  d.link = function(scope, elem, attrs) {
+  switchside.link = function(scope, elem, attrs) {
     angular.element(elem).on("keydown", function(e) {
 
       if(!scope.isInputSelected){ //Handler so you can't move while navigating an input
@@ -50,15 +50,15 @@ app.directive("switchside", function() {
     });
   }
 
-  return d;
+  return switchside;
 
 });
 
 app.factory('eventFactory', function() {
 
-  var o = {};
+  var eventFactory = {};
 
-  o.getEvents = function(){
+  eventFactory.getEvents = function(){
     var cookieValue = getCookie("events");
     if(cookieValue){
       return JSON.parse(cookieValue);
@@ -68,13 +68,19 @@ app.factory('eventFactory', function() {
     }
   }
 
-  o.pushEvent = function(eventObject){
+  eventFactory.pushEvent = function(eventObject){
     var tempEventArray = this.getEvents();
     tempEventArray.push(eventObject);
-    setCookie("events",JSON.stringify(tempEventArray));
+    return setCookie("events",JSON.stringify(tempEventArray)); //If the cookie has been set, return 1
   }
 
-  return o;
+  eventFactory.deleteEventByIndex = function(eventIndex){
+    var tempEventArray = this.getEvents();
+    tempEventArray.splice(eventIndex,1);
+    return setCookie("events",JSON.stringify(tempEventArray)); //If the cookie has been set, return 1
+  }
+
+  return eventFactory;
 
 });
 
@@ -82,10 +88,17 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   
   var numberOfEventSides = 4;
 
-  $scope.cubeSide = 'cube-top';
+  var compareEventsByDate = function(firstElem,secondElem){
+    return new Date(firstElem.date) - new Date(secondElem.date);
+  }
+
+  $scope.cubeSide = 'cube-side'; //Initializing with the side the user sees initially
   $scope.eventDisplayIndex=0;
   $scope.isInputSelected = false;
   $scope.events = eventFactory.getEvents();
+  //Because we use our controller to feed the ui the 4 elements instead of using an ng-repeat
+  //we have to sort our array inside the controller before passing it to the ui.
+  $scope.events.sort(compareEventsByDate);
 
   $scope.setInputFocus = function(value){
     $scope.isInputSelected = value;
@@ -93,7 +106,9 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
 
   $scope.rotateTo = function(side){
     $scope.cubeSide = 'cube-'+side;
+    //Whenever a rotate happens, update the events (so that the newly created events are added and sorted)
     $scope.events = eventFactory.getEvents();
+    $scope.events.sort(compareEventsByDate);
   }
 
   $scope.incrementDisplayIndex = function(){
@@ -118,31 +133,39 @@ app.controller('eventCreateController', ['$scope', 'eventFactory', function($sco
   $scope.event.title="";
   $scope.event.date="";
   $scope.event.desc="";
+  $scope.success="";
   $scope.warnings="";
 
   $scope.setStartDateBeforeRender = function($dates) {
+
     var activeDate = moment().subtract(1, 'day').add(1, 'minute');
 
-    $dates.filter(function (date) {
+    $dates.filter(function (date){
       return date.localDateValue() <= activeDate.valueOf()
-    }).forEach(function (date) {
+    }).forEach(function (date){
       date.selectable = false;
-    })
+    });
+
   }
 
   $scope.resetFields = function(){
     $scope.event.title="";
     $scope.event.date="";
     $scope.event.desc="";
+    $scope.success="";
     $scope.warnings="";
   }
 
   $scope.saveEvent = function(){
     if($scope.event.title&&$scope.event.desc&&$scope.event.date){
-      eventFactory.pushEvent($scope.event);
+      if(eventFactory.pushEvent($scope.event)){  //Simple sync workaround to do something after the event has been pushed
+        $scope.resetFields();
+        $scope.success="The event has been added!";
+      }
     }
     else{
-      console.log("Display Warning");
+      $scope.success="";
+      $scope.warnings="Please complete all the fields.";
     }
   }
 

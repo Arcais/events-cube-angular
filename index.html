@@ -46,6 +46,8 @@
         <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.desc">
         </textarea>
         <button ng-click="saveEvent()">Save event</button>
+        {{success}}
+        {{warnings}}
       </div>
       <div ng-switch-when="cube-side">
         <div ng-if="events[eventDisplayIndex]">
