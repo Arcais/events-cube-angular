@@ -56,27 +56,64 @@
 
     </div>
 
-    <div class="square {{cubeSideAnimationStyle}} cube-side" ng-switch-when="cube-side" ng-repeat="i in [0,1,2,3]" ng-if="i==eventDisplayIndex">
+    <div class="square {{cubeSideAnimationStyle}} cube-side" ng-switch-when="cube-side" ng-repeat="index in [0,1,2,3]" ng-if="index==eventDisplayIndex" ng-class="{evenside: index%2}">
 
-      <div ng-if="events[i]">
-        <div>Event no. {{i}}</div>
-        <div>Title: {{events[i].title}}</div>
-        <div>Date: {{events[i].date | date:'medium'}}</div>
-        <div>Desc: {{events[i].desc}}</div>
-      </div>
-      <div ng-if="!events[i]">
-        Event {{i}} doesn't exist.
+      
+      <div ng-if="events[index]">
+
+        <div ng-if="!editOn[index]">
+          <div>Event no. {{index}}</div>
+          <div>Title: {{events[index].title}}</div>
+          <div>Date: {{events[index].date | date:'medium'}}</div>
+          <div>Desc: {{events[index].desc}}</div>
+          <div class="bigbtncontainer">
+            <div class="edit bigbtn" ng-click="turnEditOn(index)">
+              Edit
+            </div>
+            <div class="delete bigbtn" ng-click="deleteEvent(index)">
+              Delete
+            </div>
+          </div>
+        </div>
+
+        <div ng-if="editOn[index]">
+          <div>Title:</div>
+          <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="tempEvent.title"/>
+
+          <div>Date:</div>
+          <div class="dropdown" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
+            <a class="dropdown-toggle" id="dropdown" role="button" data-toggle="dropdown">
+              <div class="input-group">
+                <input type="text" id="date" name="date" class="form-control" data-ng-model="tempEvent.date">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+              </div>
+            </a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <datetimepicker data-ng-model="tempEvent.date" data-before-render="setStartDateBeforeRender($dates)"></datetimepicker>
+            </ul>
+          </div>
+
+          <div>Description:</div>
+          <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="tempEvent.desc">
+          </textarea>
+
+          <div class="bigbtncontainer">
+            <div class="edit bigbtn" ng-click="completeEdit(index)">
+              Finish Edit
+            </div>
+            <div class="delete bigbtn" ng-click="turnEditOff(index)">
+              Nevermind
+            </div>
+          </div>
+        </div>
+
       </div>
 
-<!--       <div ng-if="events[eventDisplayIndex]">
-        <div>Event no. {{eventDisplayIndex}}</div>
-        <div>Title: {{events[eventDisplayIndex].title}}</div>
-        <div>Date: {{events[eventDisplayIndex].date | date:'medium'}}</div>
-        <div>Desc: {{events[eventDisplayIndex].desc}}</div>
+      <div ng-if="!events[index]">
+
+        Event {{index}} doesn't exist.
+
       </div>
-      <div ng-if="!events[eventDisplayIndex]">
-        Event {{eventDisplayIndex}} doesn't exist.
-      </div> -->
 
     </div>
 

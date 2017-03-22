@@ -80,6 +80,12 @@ app.factory('eventFactory', function() {
     return setCookie("events",JSON.stringify(tempEventArray)); //If the cookie has been set, return 1
   }
 
+  eventFactory.editEventByIndex = function(eventIndex,eventObject){
+    var tempEventArray = this.getEvents();
+    tempEventArray[eventIndex]=eventObject;
+    return setCookie("events",JSON.stringify(tempEventArray)); //If the cookie has been set, return 1
+  }
+
   return eventFactory;
 
 });
@@ -97,9 +103,32 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   $scope.eventDisplayIndex=0;
   $scope.isInputSelected = false;
   $scope.events = eventFactory.getEvents();
+  $scope.editOn = [0,0,0,0];
   //Because we use our controller to feed the ui the 4 elements instead of using an ng-repeat with the elements
   //we have to sort our array inside the controller before passing it to the ui.
   $scope.events.sort(compareEventsByDate);
+
+  $scope.turnEditOn = function(index){
+    console.log(1);
+    $scope.editOn[index]=1;
+    $scope.tempEvent=$scope.events[index];
+  }
+
+  $scope.turnEditOff = function(index){
+    $scope.editOn[index]=0;
+  }
+
+  $scope.completeEdit = function(index){
+    eventFactory.editEventByIndex(index,$scope.tempEvent);
+    $scope.events = eventFactory.getEvents();
+    $scope.turnEditOff(index);
+  }
+
+  $scope.deleteEvent = function(index){
+    eventFactory.deleteEventByIndex(index);
+    $scope.events = eventFactory.getEvents();
+  }
+
 
   $scope.setInputFocus = function(value){
     $scope.isInputSelected = value;

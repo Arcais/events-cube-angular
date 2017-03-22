@@ -10,6 +10,13 @@ body{
   justify-content: center;
   align-items:center;
   overflow:hidden;
+  color:#333;
+}
+
+input,
+textarea,
+.input-group{
+  color:#333;
 }
 
 .cube-container{
@@ -41,6 +48,12 @@ body{
   align-items:center;
   color:#ecf0f1;
   text-shadow:1px 1px 2px #333;
+  background-color:#3498db;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
+.evenside{
   background-color:#2980b9;
 }
 
@@ -67,20 +80,50 @@ body{
   margin-bottom:10px;
 }
 
-// .cube-container{
-//   perspective: 800;
-//   perspective-origin: 50% 400px;
-//   transition: .5s linear;
-//   // transform-style: preserve-3d;
-// }
+.bigbtncontainer{
+  display:flex;
+  flex-flow:row nowrap;
+  justify-content: center;
+  align-items:center;
+}
 
-// .cube-top-animation.ng-enter{
-//   transform: perspective(800px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
-// }
+.bigbtn{
+  margin:10px;
+  cursor:pointer;
+  text-transform: uppercase;
+  font-size: 20px;
+  width:200px;
+  height:60px;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  line-height:60px;
+}
+.bigbtn:hover{
+  font-weight:400;
+  font-size:23px;
+}
 
-// .cube-top-animation.ng-leave{
-//   transform: perspective(800px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);  
-// }
+.edit{
+  background-color:#2ecc71;
+}
+.edit:hover{
+  background-color:#27ae60;  
+}
+.edit:active{
+  transition-duration: 0.2s;
+  background-color:#078e40;  
+}
+
+.delete{
+  background-color:#e74c3c;
+}
+.delete:hover{
+  background-color:#c0392b;  
+}
+.delete:active{
+  transition-duration: 0.2s;
+  background-color:#a0190b;  
+}
 
 .square.ng-enter,.square.ng-leave{
   transform-origin: 50% 50% -350px;
