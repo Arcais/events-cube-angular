@@ -9,9 +9,10 @@ body{
   flex-flow:row nowrap;
   justify-content: center;
   align-items:center;
+  overflow:hidden;
 }
 
-.cube{
+.cube-container{
   position:relative;
   height:100%;
   width:100%;
@@ -20,9 +21,10 @@ body{
 }
 
 .square{
+  position:absolute;
   height:100%;
   width:100%;
-  border-radius:1%;
+  // border-radius:1%;
   padding:20px;
   text-align:center;
   font-size:22px;
@@ -34,7 +36,7 @@ body{
 
 .cube-side{
   display:flex;
-  flex-flow:row nowrap;
+  flex-flow:column nowrap;
   justify-content: center;
   align-items:center;
   color:#ecf0f1;
@@ -44,7 +46,7 @@ body{
 
 .cube-bottom{
   display:flex;
-  flex-flow:row nowrap;
+  flex-flow:column nowrap;
   justify-content: center;
   align-items:center;
   color:white;
@@ -63,4 +65,86 @@ body{
 .input-container>.input-group{
   margin-top:10px;
   margin-bottom:10px;
+}
+
+// .cube-container{
+//   perspective: 800;
+//   perspective-origin: 50% 400px;
+//   transition: .5s linear;
+//   // transform-style: preserve-3d;
+// }
+
+// .cube-top-animation.ng-enter{
+//   transform: perspective(800px) rotateX(-90deg) rotateY(0deg) rotateZ(0deg);
+// }
+
+// .cube-top-animation.ng-leave{
+//   transform: perspective(800px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);  
+// }
+
+.square.ng-enter,.square.ng-leave{
+  transform-origin: 50% 50% -350px;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transform-style: preserve-3d;
+}
+
+//Cube Side Switch Transforms Mixin Set
+@mixin initialPosition(){
+  transform: rotateX(00deg) rotateY(00deg) rotateZ(00deg);
+}
+
+@mixin upPosition(){
+  transform: rotateX(90deg) rotateY(00deg) rotateZ(0deg);
+}
+
+@mixin downPosition(){
+  transform: rotateX(-90deg) rotateY(00deg) rotateZ(0deg);
+}
+
+@mixin leftPosition(){
+  transform: rotateX(00deg) rotateY(90deg) rotateZ(0deg);
+}
+
+@mixin rightPosition(){
+  transform: rotateX(00deg) rotateY(-90deg) rotateZ(0deg);
+}
+
+.cube-top.ng-enter.ng-enter-active,
+.cube-bottom.ng-enter.ng-enter-active,
+.cube-side.ng-enter.ng-enter-active{
+  @include initialPosition();
+}
+
+//Cube Top Animations
+.cube-top.ng-enter,
+.cube-top.ng-leave.ng-leave-active{
+  @include upPosition();
+}
+
+//Cube Bottom Animations
+.cube-bottom.ng-enter,
+.cube-bottom.ng-leave.ng-leave-active{
+  @include downPosition();
+}
+
+//Cube Side Animations
+.sideAnimateToTop.ng-enter,
+.cube-top-anim>.cube-side.ng-leave.ng-leave-active{
+  @include downPosition();
+}
+
+.sideAnimateToBottom.ng-enter,
+.cube-bottom-anim>.cube-side.ng-leave.ng-leave-active{
+  @include upPosition();
+}
+
+.sideAnimateToRight.ng-enter,
+.sideAnimateToLeft.ng-leave.ng-leave-active{
+  @include leftPosition();
+}
+
+.sideAnimateToLeft.ng-enter,
+.sideAnimateToRight.ng-leave.ng-leave-active{
+  @include rightPosition();
 }

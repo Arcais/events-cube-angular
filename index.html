@@ -24,47 +24,70 @@
 
 <body tabindex="0" ng-controller="cubeController" switchside="cube-top">
 
-  <div class="cube">
-    <div class="square {{cubeSide}}" ng-switch="cubeSide">
-      <div class="input-container" ng-controller="eventCreateController" ng-switch-when="cube-top">
-        <div><h1><strong>Create an event</strong></h1></div>
-        <div>Give it a title:</div>
-        <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.title"/>
-        <div>Choose a date:</div>
-        <div class="dropdown" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
-          <a class="dropdown-toggle" id="dropdown" role="button" data-toggle="dropdown">
-            <div class="input-group">
-              <input type="text" id="date" name="date" class="form-control" data-ng-model="event.date">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-            </div>
-          </a>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker data-ng-model="event.date" data-before-render="setStartDateBeforeRender($dates)"></datetimepicker>
-          </ul>
-        </div>
-        <div>Add a description:</div>
-        <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.desc">
-        </textarea>
-        <button ng-click="saveEvent()">Save event</button>
-        {{success}}
-        {{warnings}}
+  <div class="cube-container {{cubeSide}}-anim" ng-switch="cubeSide">  <!--We use {{cubeSide}}-anim to let cube-side know which animation to use-->
+
+    <div class="square cube-top input-container" ng-controller="eventCreateController" ng-switch-when="cube-top">
+
+      <div><h1><strong>Create an event</strong></h1></div>
+
+      <div>Give it a title:</div>
+      <input type="text" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.title"/>
+
+      <div>Choose a date:</div>
+      <div class="dropdown" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)">
+        <a class="dropdown-toggle" id="dropdown" role="button" data-toggle="dropdown">
+          <div class="input-group">
+            <input type="text" id="date" name="date" class="form-control" data-ng-model="event.date">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+          <datetimepicker data-ng-model="event.date" data-before-render="setStartDateBeforeRender($dates)"></datetimepicker>
+        </ul>
       </div>
-      <div ng-switch-when="cube-side">
-        <div ng-if="events[eventDisplayIndex]">
-          <div>Event no. {{eventDisplayIndex}}</div>
-          <div>Title: {{events[eventDisplayIndex].title}}</div>
-          <div>Date: {{events[eventDisplayIndex].date | date:'medium'}}</div>
-          <div>Desc: {{events[eventDisplayIndex].desc}}</div>
-        </div>
-        <div ng-if="!events[eventDisplayIndex]">
-          Event {{eventDisplayIndex}} doesn't exist.
-        </div>
-      </div>
-      <div ng-switch-when="cube-bottom">
-        <div>Thank you for using this app!</div>
-        <div>© Dragos Paun, 2017</div>
-      </div>
+
+      <div>Add a description:</div>
+      <textarea name="" id="" cols="30" rows="10" ng-focus="setInputFocus(true)" ng-blur="setInputFocus(false)" ng-model="event.desc">
+      </textarea>
+
+      <button ng-click="saveEvent()">Save event</button>
+      {{success}}
+      {{warnings}}
+
     </div>
+
+    <div class="square {{cubeSideAnimationStyle}} cube-side" ng-switch-when="cube-side" ng-repeat="i in [0,1,2,3]" ng-if="i==eventDisplayIndex">
+
+      <div ng-if="events[i]">
+        <div>Event no. {{i}}</div>
+        <div>Title: {{events[i].title}}</div>
+        <div>Date: {{events[i].date | date:'medium'}}</div>
+        <div>Desc: {{events[i].desc}}</div>
+      </div>
+      <div ng-if="!events[i]">
+        Event {{i}} doesn't exist.
+      </div>
+
+<!--       <div ng-if="events[eventDisplayIndex]">
+        <div>Event no. {{eventDisplayIndex}}</div>
+        <div>Title: {{events[eventDisplayIndex].title}}</div>
+        <div>Date: {{events[eventDisplayIndex].date | date:'medium'}}</div>
+        <div>Desc: {{events[eventDisplayIndex].desc}}</div>
+      </div>
+      <div ng-if="!events[eventDisplayIndex]">
+        Event {{eventDisplayIndex}} doesn't exist.
+      </div> -->
+
+    </div>
+
+
+    <div class="square cube-bottom" ng-switch-when="cube-bottom">
+
+      <div>Thank you for using this app!</div>
+      <div>© Dragos Paun, 2017</div>
+
+    </div>
+
   </div>
 
 </html>

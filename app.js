@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('cubed', ['ngRoute', 'ui.bootstrap.datetimepicker']);
+var app = angular.module('cubed', ['ngRoute', 'ui.bootstrap.datetimepicker', 'ngAnimate']);
 
 app.directive("switchside", function() {
 
@@ -93,10 +93,11 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   }
 
   $scope.cubeSide = 'cube-side'; //Initializing with the side the user sees initially
+  $scope.cubeSideAnimationStyle = ''; //We will use this to animate the 'cube-side' face by giving it an animation class
   $scope.eventDisplayIndex=0;
   $scope.isInputSelected = false;
   $scope.events = eventFactory.getEvents();
-  //Because we use our controller to feed the ui the 4 elements instead of using an ng-repeat
+  //Because we use our controller to feed the ui the 4 elements instead of using an ng-repeat with the elements
   //we have to sort our array inside the controller before passing it to the ui.
   $scope.events.sort(compareEventsByDate);
 
@@ -105,6 +106,17 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   }
 
   $scope.rotateTo = function(side){
+
+    if($scope.cubeSide=='cube-side'){  //We do this so that .ng-enter has a handler it can work on after cubeSide has changed
+      switch(side){
+        case 'top':
+        $scope.cubeSideAnimationStyle='sideAnimateToTop';
+        break;
+        case 'bottom':
+        $scope.cubeSideAnimationStyle='sideAnimateToBottom';
+      }
+    }
+
     $scope.cubeSide = 'cube-'+side;
     //Whenever a rotate happens, update the events (so that the newly created events are added and sorted)
     $scope.events = eventFactory.getEvents();
@@ -112,6 +124,7 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   }
 
   $scope.incrementDisplayIndex = function(){
+    $scope.cubeSideAnimationStyle='sideAnimateToRight';
     $scope.eventDisplayIndex++
     if($scope.eventDisplayIndex>(numberOfEventSides-1)){
       $scope.eventDisplayIndex=$scope.eventDisplayIndex%numberOfEventSides;
@@ -119,6 +132,7 @@ app.controller('cubeController', ['$scope', 'eventFactory', function($scope, eve
   }
 
   $scope.decrementDisplayIndex = function(){
+    $scope.cubeSideAnimationStyle='sideAnimateToLeft';
     $scope.eventDisplayIndex--;
     if($scope.eventDisplayIndex<0){
       $scope.eventDisplayIndex=numberOfEventSides+$scope.eventDisplayIndex;
